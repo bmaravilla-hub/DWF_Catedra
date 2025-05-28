@@ -1,0 +1,26 @@
+.table-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0px 6px 15px rgba(231, 84, 128, 0.1);
+}
+
+.styled-table thead {
+  background-color: #ffe6ea;
+  color: #e75480;
+  font-weight: bold;
+  text-align: center;
+}
+
+.styled-table td, .styled-table th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.stock-bajo {
+  background-color: #fff0f5;
+  color: #d14572;
+  font-weight: bold;
+}
