@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { FaExclamationTriangle } from 'react-icons/fa';
+import BotonRetroceder from '../../components/BotonRetroceder';
 import './Reportes.css';
 
 const ReporteStockCritico = () => {
@@ -8,35 +9,35 @@ const ReporteStockCritico = () => {
 
   useEffect(() => {
     const demo = [
-      { nombre: "Ibuprofeno", lote: "B456", cantidad: 8 },
-      { nombre: "Amoxicilina", lote: "C789", cantidad: 5 }
+      { nombre: "Ibuprofeno", lote: "L003", stock: 5, vencimiento: "2024-10-10" },
+      { nombre: "Omeprazol", lote: "L014", stock: 9, vencimiento: "2024-12-01" }
     ];
     setProductos(demo);
   }, []);
 
   return (
     <div className="reporte-container">
+      <BotonRetroceder />
       <div className="d-flex align-items-center gap-2 mb-3 text-danger">
         <FaExclamationTriangle size={24} />
-        <h2 className="m-0">Reporte de Stock Crítico</h2>
-      </div>
-      <div className="alert alert-warning text-center fw-bold">
-        Mostrando productos con ≤ 10 unidades en stock.
+        <h2 className="m-0">Stock Crítico (≤ 10)</h2>
       </div>
       <Table bordered hover responsive className="styled-table">
         <thead>
           <tr>
-            <th>Nombre</th>
+            <th>Producto</th>
             <th>Lote</th>
-            <th>Cantidad</th>
+            <th>Stock</th>
+            <th>Fecha Vencimiento</th>
           </tr>
         </thead>
         <tbody>
-          {productos.map((prod, idx) => (
-            <tr key={idx} className="text-danger fw-bold">
-              <td>{prod.nombre}</td>
-              <td>{prod.lote}</td>
-              <td>{prod.cantidad}</td>
+          {productos.map((p, i) => (
+            <tr key={i} className="text-danger fw-bold">
+              <td>{p.nombre}</td>
+              <td>{p.lote}</td>
+              <td>{p.stock}</td>
+              <td>{p.vencimiento}</td>
             </tr>
           ))}
         </tbody>

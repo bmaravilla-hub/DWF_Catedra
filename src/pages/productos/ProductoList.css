@@ -24,3 +24,39 @@
   color: #d14572;
   font-weight: bold;
 }
+.img-fluid {
+  border: 1px solid #f1cfdc;
+}
+.table-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(231, 84, 128, 0.1);
+}
+
+.btn-pink {
+  background-color: #e75480;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+.btn-pink:hover {
+  background-color: #d14572;
+  transform: scale(1.03);
+}
+
+.styled-table thead {
+  background-color: #ffe6ea;
+  color: #e75480;
+  font-weight: bold;
+  text-align: center;
+}
+
+.stock-bajo {
+  background-color: #fff0f5;
+  color: #d14572;
+  font-weight: bold;
+}

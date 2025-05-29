@@ -1,29 +1,10 @@
 .reporte-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 30px auto;
-  background: #ffffff;
+  background: #fff;
   padding: 25px;
   border-radius: 16px;
-  box-shadow: 0px 6px 20px rgba(231, 84, 128, 0.1);
-}
-
-.reporte-container h2 {
-  color: #e75480;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.btn-pink {
-  background-color: #e75480;
-  color: white;
-  font-weight: bold;
-  border: none;
-  padding: 10px 20px;
-}
-
-.btn-pink:hover {
-  background-color: #d14572;
-  transform: scale(1.02);
+  box-shadow: 0 6px 15px rgba(231, 84, 128, 0.1);
 }
 
 .styled-table thead {
@@ -36,4 +17,17 @@
 .styled-table td, .styled-table th {
   text-align: center;
   vertical-align: middle;
+}
+
+.btn-pink {
+  background-color: #e75480;
+  color: white;
+  font-weight: bold;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-pink:hover {
+  background-color: #d14572;
+  transform: scale(1.03);
 }

@@ -1,0 +1,12 @@
+.btn-pink {
+  background-color: #e75480;
+  color: white;
+  font-weight: bold;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-pink:hover {
+  background-color: #d14572;
+  transform: scale(1.03);
+}
