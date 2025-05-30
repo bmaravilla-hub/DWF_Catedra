@@ -4,7 +4,12 @@
   background: #fff;
   padding: 25px;
   border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(231, 84, 128, 0.1);
+  box-shadow: 0px 6px 15px rgba(231, 84, 128, 0.1);
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .styled-table thead {
@@ -17,6 +22,7 @@
 .styled-table td, .styled-table th {
   text-align: center;
   vertical-align: middle;
+  padding: 10px;
 }
 
 .btn-pink {
@@ -30,4 +36,18 @@
 .btn-pink:hover {
   background-color: #d14572;
   transform: scale(1.03);
+}
+
+.btn-outline-primary, .btn-outline-danger {
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 0 3px;
+}
+
+/* Para que la tabla sea responsive en pantallas pequeñas */
+@media (max-width: 768px) {
+  .styled-table {
+    display: block;
+    overflow-x: auto;
+  }
 }

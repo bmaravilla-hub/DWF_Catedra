@@ -7,6 +7,16 @@
   box-shadow: 0 6px 15px rgba(231, 84, 128, 0.1);
 }
 
+.table-responsive {
+  overflow-x: auto;
+}
+
+.styled-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
 .styled-table thead {
   background-color: #ffe6ea;
   color: #e75480;
@@ -14,9 +24,76 @@
   text-align: center;
 }
 
-.styled-table td, .styled-table th {
+.styled-table th, .styled-table td {
+  padding: 10px;
   text-align: center;
   vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
+}
+
+/* Anchos específicos para cada columna */
+.styled-table th:nth-child(1), .styled-table td:nth-child(1) {
+  width: 13%; /* Nombre */
+}
+
+.styled-table th:nth-child(2), .styled-table td:nth-child(2) {
+  width: 10%; /* Teléfono */
+}
+
+.styled-table th:nth-child(3), .styled-table td:nth-child(3) {
+  width: 15%; /* Dirección */
+}
+
+.styled-table th:nth-child(4), .styled-table td:nth-child(4) {
+  width: 15%; /* Correo */
+}
+
+.styled-table th:nth-child(5), .styled-table td:nth-child(5) {
+  width: 10%; /* Contacto */
+}
+
+.styled-table th:nth-child(6), .styled-table td:nth-child(6) {
+  width: 10%; /* Frecuencia */
+}
+
+.styled-table th:nth-child(7), .styled-table td:nth-child(7) {
+  width: 10%; /* Tipo Pago */
+}
+
+.styled-table th:nth-child(8), .styled-table td:nth-child(8) {
+  width: 15%; /* Acciones */
+}
+
+/* Mostrar el texto completo al pasar el cursor */
+.styled-table td[data-content]:hover::after {
+  content: attr(data-content);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: #fff;
+  padding: 5px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  min-width: 150px;
+  max-width: 300px;
+  white-space: normal;
+  text-align: left;
+  display: block;
+}
+
+.action-cell {
+  width: 130px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
 }
 
 .btn-pink {
@@ -30,4 +107,16 @@
 .btn-pink:hover {
   background-color: #d14572;
   transform: scale(1.03);
+}
+
+.btn-outline-primary, .btn-outline-danger, .btn-outline-info {
+  border-radius: 4px;
+  padding: 5px 8px;
+}
+
+/* Para que la tabla sea responsive en pantallas pequeñas */
+@media (max-width: 768px) {
+  .styled-table {
+    table-layout: auto;
+  }
 }

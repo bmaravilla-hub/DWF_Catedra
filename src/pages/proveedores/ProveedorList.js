@@ -1,70 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { Table, Button, Modal } from 'react-bootstrap';
 import { FaTruck, FaPlusCircle, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import BotonRetroceder from '../../components/BotonRetroceder';
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { proveedorService } from '../../services/api';
 import './ProveedorList.css';
 
 const ProveedorList = () => {
   const [proveedores, setProveedores] = useState([]);
-  const [showForm, setShowForm] = useState(false);
   const [showDetalle, setShowDetalle] = useState(false);
-  const [modoEditar, setModoEditar] = useState(false);
   const [proveedorActivo, setProveedorActivo] = useState(null);
-
-  const [nuevoProveedor, setNuevoProveedor] = useState({
-    nombre: '',
-    telefono: '',
-    direccion: '',
-    correo: '',
-    contacto: ''
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setProveedores([
-      {
-        id: 1,
-        nombre: "Laboratorio Santa Fe",
-        telefono: "2222-3333",
-        direccion: "San Salvador",
-        correo: "santafe@lab.com",
-        contacto: "Sr. Luis"
-      }
-    ]);
+    fetchProveedores();
   }, []);
 
-  const handleChange = (e) => {
-    setNuevoProveedor({ ...nuevoProveedor, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (modoEditar) {
-      const actualizados = proveedores.map((p) =>
-        p.id === proveedorActivo.id ? { ...nuevoProveedor, id: p.id } : p
-      );
-      setProveedores(actualizados);
-    } else {
-      const nuevo = { ...nuevoProveedor, id: proveedores.length + 1 };
-      setProveedores([...proveedores, nuevo]);
+  const fetchProveedores = async () => {
+    setLoading(true);
+    try {
+      const data = await proveedorService.getAll();
+      setProveedores(data);
+    } catch (err) {
+      console.error('Error al cargar los proveedores:', err);
+      setError('Error al cargar los proveedores: ' + (err.message || 'Error desconocido'));
+    } finally {
+      setLoading(false);
     }
-
-    setNuevoProveedor({
-      nombre: '', telefono: '', direccion: '', correo: '', contacto: ''
-    });
-    setModoEditar(false);
-    setShowForm(false);
   };
 
-  const handleEditar = (prov) => {
-    setModoEditar(true);
-    setNuevoProveedor(prov);
-    setProveedorActivo(prov);
-    setShowForm(true);
-  };
-
-  const handleEliminar = (id) => {
+  const handleEliminar = async (id) => {
     if (window.confirm("¿Deseas eliminar este proveedor?")) {
-      setProveedores(proveedores.filter((p) => p.id !== id));
+      try {
+        await proveedorService.delete(id);
+        toast.success('Proveedor eliminado con éxito');
+        fetchProveedores(); // Actualizar la lista después de eliminar
+      } catch (err) {
+        console.error('Error al eliminar el proveedor:', err);
+        toast.error('Error al eliminar el proveedor');
+      }
     }
   };
 
@@ -73,84 +50,78 @@ const ProveedorList = () => {
     setShowDetalle(true);
   };
 
+  // Función para truncar el texto si es demasiado largo
+  const truncateText = (text, maxLength = 20) => {
+    return text && text.length > maxLength 
+      ? text.substring(0, maxLength) + '...' 
+      : text || '';
+  };
+
   return (
     <div className="proveedor-container">
       <BotonRetroceder />
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="text-danger"><FaTruck className="me-2" /> Lista de Proveedores</h2>
-        <Button className="btn-pink" onClick={() => { setShowForm(true); setModoEditar(false); }}>
+        <Button className="btn-pink" onClick={() => navigate('/proveedores/nuevo')}>
           <FaPlusCircle className="me-2" /> Añadir Proveedor
         </Button>
       </div>
 
-      <Table bordered hover className="styled-table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Teléfono</th>
-            <th>Dirección</th>
-            <th>Correo</th>
-            <th>Contacto</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {proveedores.map((p) => (
-            <tr key={p.id}>
-              <td>{p.nombre}</td>
-              <td>{p.telefono}</td>
-              <td>{p.direccion}</td>
-              <td>{p.correo}</td>
-              <td>{p.contacto}</td>
-              <td>
-                <Button size="sm" variant="outline-info" className="me-2" onClick={() => handleVerDetalle(p)}>
-                  <FaEye />
-                </Button>
-                <Button size="sm" variant="outline-primary" className="me-2" onClick={() => handleEditar(p)}>
-                  <FaEdit />
-                </Button>
-                <Button size="sm" variant="outline-danger" onClick={() => handleEliminar(p.id)}>
-                  <FaTrash />
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      {error && <div className="alert alert-danger">{error}</div>}
+      
+      {loading ? (
+        <div className="text-center py-3">Cargando...</div>
+      ) : (
+        <div className="table-responsive">
+          <Table bordered hover className="styled-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Correo</th>
+                <th>Contacto</th>
+                <th>Frecuencia</th>
+                <th>Tipo Pago</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {proveedores.length > 0 ? (
+                proveedores.map((p) => (
+                  <tr key={p.idProveedor || p.id}>
+                    <td data-content={p.nombreProveedor}>{truncateText(p.nombreProveedor, 15)}</td>
+                    <td data-content={p.telefono}>{p.telefono}</td>
+                    <td data-content={p.direccion}>{truncateText(p.direccion, 15)}</td>
+                    <td data-content={p.correo}>{truncateText(p.correo, 15)}</td>
+                    <td data-content={p.contacto}>{truncateText(p.contacto, 10)}</td>
+                    <td data-content={p.frecuenciaEntrega}>{p.frecuenciaEntrega}</td>
+                    <td data-content={p.tipoPago}>{p.tipoPago}</td>
+                    <td className="action-cell">
+                      <div className="action-buttons">
+                        <Button size="sm" variant="outline-info" onClick={() => handleVerDetalle(p)}>
+                          <FaEye />
+                        </Button>
+                        <Button size="sm" variant="outline-primary" onClick={() => navigate(`/proveedores/editar/${p.idProveedor || p.id}`)}>
+                          <FaEdit />
+                        </Button>
+                        <Button size="sm" variant="outline-danger" onClick={() => handleEliminar(p.idProveedor || p.id)}>
+                          <FaTrash />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center">No hay proveedores registrados.</td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </div>
+      )}
 
-      {/* Modal Formulario */}
-      <Modal show={showForm} onHide={() => setShowForm(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{modoEditar ? 'Editar Proveedor' : 'Registrar Proveedor'}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control name="nombre" value={nuevoProveedor.nombre} onChange={handleChange} required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Teléfono</Form.Label>
-              <Form.Control name="telefono" value={nuevoProveedor.telefono} onChange={handleChange} required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Dirección</Form.Label>
-              <Form.Control name="direccion" value={nuevoProveedor.direccion} onChange={handleChange} required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Correo</Form.Label>
-              <Form.Control type="email" name="correo" value={nuevoProveedor.correo} onChange={handleChange} required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Persona de contacto</Form.Label>
-              <Form.Control name="contacto" value={nuevoProveedor.contacto} onChange={handleChange} required />
-            </Form.Group>
-            <Button type="submit" className="btn-pink w-100">{modoEditar ? 'Guardar Cambios' : 'Guardar Proveedor'}</Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
-
-      {/* Modal Detalle */}
       <Modal show={showDetalle} onHide={() => setShowDetalle(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Detalle del Proveedor</Modal.Title>
@@ -158,15 +129,18 @@ const ProveedorList = () => {
         <Modal.Body>
           {proveedorActivo && (
             <div>
-              <p><strong>Nombre:</strong> {proveedorActivo.nombre}</p>
+              <p><strong>Nombre:</strong> {proveedorActivo.nombreProveedor}</p>
               <p><strong>Teléfono:</strong> {proveedorActivo.telefono}</p>
               <p><strong>Dirección:</strong> {proveedorActivo.direccion}</p>
               <p><strong>Correo:</strong> {proveedorActivo.correo}</p>
               <p><strong>Contacto:</strong> {proveedorActivo.contacto}</p>
+              <p><strong>Frecuencia de Entrega:</strong> {proveedorActivo.frecuenciaEntrega}</p>
+              <p><strong>Tipo de Pago:</strong> {proveedorActivo.tipoPago}</p>
             </div>
           )}
         </Modal.Body>
       </Modal>
+      <ToastContainer />
     </div>
   );
 };

@@ -6,9 +6,9 @@ import { FaCapsules, FaUsers, FaFilePdf } from 'react-icons/fa';
 const DashboardAdmin = () => {
   return (
     <div style={{ display: 'flex' }}>
-      <Sidebar />
       <div className="main-dashboard" style={{ marginLeft: '240px', padding: '30px', width: '100%' }}>
         <h2 className="mb-4 text-center text-danger">Panel Administrativo</h2>
+              <Sidebar />
         <Container>
           <Row className="g-4">
             <Col md={4}>

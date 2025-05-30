@@ -7,6 +7,11 @@
   box-shadow: 0px 6px 15px rgba(231, 84, 128, 0.1);
 }
 
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 .styled-table thead {
   background-color: #ffe6ea;
   color: #e75480;
@@ -17,23 +22,27 @@
 .styled-table td, .styled-table th {
   text-align: center;
   vertical-align: middle;
+  padding: 10px;
+}
+
+/* Make sure the action column is wide enough */
+.styled-table th:last-child, .styled-table td:last-child {
+  min-width: 160px; /* Increased width for action buttons */
+  white-space: nowrap;
+}
+
+/* Style for action buttons container */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: nowrap;
 }
 
 .stock-bajo {
   background-color: #fff0f5;
   color: #d14572;
   font-weight: bold;
-}
-.img-fluid {
-  border: 1px solid #f1cfdc;
-}
-.table-container {
-  max-width: 1000px;
-  margin: 30px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(231, 84, 128, 0.1);
 }
 
 .btn-pink {
@@ -41,6 +50,7 @@
   color: white;
   font-weight: bold;
   border: none;
+  transition: all 0.3s ease;
 }
 
 .btn-pink:hover {
@@ -48,15 +58,19 @@
   transform: scale(1.03);
 }
 
-.styled-table thead {
-  background-color: #ffe6ea;
-  color: #e75480;
-  font-weight: bold;
-  text-align: center;
+.btn-outline-primary, 
+.btn-outline-danger, 
+.btn-outline-info, 
+.btn-outline-warning {
+  border-radius: 4px;
+  padding: 5px;
+  margin: 0 2px;
 }
 
-.stock-bajo {
-  background-color: #fff0f5;
-  color: #d14572;
-  font-weight: bold;
+/* For responsive tables on small screens */
+@media (max-width: 768px) {
+  .styled-table {
+    display: block;
+    overflow-x: auto;
+  }
 }
